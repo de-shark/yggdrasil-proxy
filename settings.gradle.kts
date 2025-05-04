@@ -1,2 +1,2 @@
-rootProject.name = "YggdrasilProxy"
+rootProject.name = "yggdrasil-proxy"
 

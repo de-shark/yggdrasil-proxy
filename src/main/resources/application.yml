@@ -1,0 +1,23 @@
+server:
+  port: 32217
+
+spring:
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+
+yggdrasil:
+  enable: true
+  log: true
+  ip: 0.0.0.0
+  servers:
+    - level: 0
+      name: "Mojang"
+      url: "https://sessionserver.mojang.com"
+      timeout: 5
+    - level: 1
+      name: "LittleSkin"
+      url: "https://littleskin.cn/api/yggdrasil/sessionserver"
+      timeout: 5

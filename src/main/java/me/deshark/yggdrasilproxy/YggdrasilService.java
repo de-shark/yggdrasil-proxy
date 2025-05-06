@@ -104,7 +104,7 @@ public class YggdrasilService {
         return responseData;
     }
 
-    public Object hasJoined(String username, String serverId) {
+    public String hasJoined(String username, String serverId) {
         for (YggdrasilServerModel server : yggdrasilServers) {
             String url = String.format("%s/session/minecraft/hasJoined?username=%s&serverId=%s",
                     server.getUrl(), username, serverId);
@@ -117,21 +117,10 @@ public class YggdrasilService {
                 if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
                     log.info("Find player on server {}", server.getName());
 
-                    // Parse response and add server name property
-                    JSONObject neoResponse = new JSONObject(response.getBody());
-                    JSONArray properties = neoResponse.getJSONArray("properties");
-
-                    JSONObject serverNameProperty = new JSONObject();
-                    serverNameProperty.put("name", "YggdrasilProxy_YggdrasilServerName");
-                    serverNameProperty.put("value", server.getName());
-                    serverNameProperty.put("signature", "=");
-
-                    properties.put(serverNameProperty);
-
                     // Save player and server to cache
                     playerCache.set(username, server.getPid());
 
-                    return neoResponse.toMap();
+                    return response.getBody();
                 } else {
                     log.warn("Can't find player on server {}", server.getName());
                 }

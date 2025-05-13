@@ -10,6 +10,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.Executors;
 
 public class Main {
@@ -24,6 +27,8 @@ public class Main {
     public static void main(String[] args) {
         try {
             LocalConfig config = LocalConfig.loadConfig();
+            List<AuthServer> sortedAuthServers = config.authServers;
+            sortedAuthServers.sort(Comparator.comparing(AuthServer::getPriority));
 
             var app = Javalin.create().start(config.port);
 
@@ -46,7 +51,7 @@ public class Main {
 
                 log.info("Player {} try to join server", username);
 
-                for (AuthServer authServer : config.authServers) {
+                for (AuthServer authServer : sortedAuthServers) {
                     String url = String.format(
                             "%s/session/minecraft/hasJoined?username=%s&serverId=%s",
                             authServer.getUrl(),

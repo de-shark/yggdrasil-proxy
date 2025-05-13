@@ -58,7 +58,10 @@ public class Main {
                             username,
                             serverId
                     );
-                    HttpRequest request = HttpRequest.newBuilder(URI.create(url)).GET().build();
+                    HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+                            .GET()
+                            .timeout(Duration.ofSeconds(authServer.getTimeout()))
+                            .build();
                     HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
                     if (response.statusCode() == 200 && !response.body().isEmpty()) {

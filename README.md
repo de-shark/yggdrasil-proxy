@@ -40,3 +40,20 @@ java -jar yggdrasil-proxy-1.0.0.jar
 ```
 -javaagent:authlib-injector-1.x.x.jar=http://localhost:32217
 ```
+
+## 配置文件
+
+```
+port: 32217  # 使用端口
+authServers:
+- priority: 0  # 优先级，数字越小优先级越高
+  name: "Mojang"  # 认证服务器名字（自定义）
+  url: "https://sessionserver.mojang.com"
+  timeout: 5
+- priority: 1
+  name: "LittleSkin"
+  # Yggdrasil认证链接，一般需要在url末尾加入“/sessionserver”
+  url: "https://littleskin.cn/api/yggdrasil/sessionserver"
+  timeout: 5
+
+```

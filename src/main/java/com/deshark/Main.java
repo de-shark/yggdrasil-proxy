@@ -1,5 +1,7 @@
-package com.deshark.entity;
+package com.deshark;
 
+import com.deshark.entity.AuthServer;
+import com.deshark.entity.LocalConfig;
 import io.javalin.Javalin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +12,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Executors;

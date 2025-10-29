@@ -53,26 +53,31 @@ public class Main {
                 log.info("Player {} try to join server", username);
 
                 for (AuthServer authServer : sortedAuthServers) {
-                    String url = String.format(
-                            "%s/session/minecraft/hasJoined?username=%s&serverId=%s",
-                            authServer.getUrl(),
-                            username,
-                            serverId
-                    );
-                    HttpRequest request = HttpRequest.newBuilder(URI.create(url))
-                            .GET()
-                            .timeout(Duration.ofSeconds(authServer.getTimeout()))
-                            .build();
-                    HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+                    try {
+                        String url = String.format(
+                                "%s/session/minecraft/hasJoined?username=%s&serverId=%s",
+                                authServer.getUrl(),
+                                username,
+                                serverId
+                        );
+                        HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+                                .GET()
+                                .timeout(Duration.ofSeconds(authServer.getTimeout()))
+                                .build();
+                        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
-                    if (response.statusCode() == 200 && !response.body().isEmpty()) {
-                        log.info("Find player {} in {} server", username, authServer.getName());
-                        ctx.result(response.body());
-                        return;
-                    } else {
-                        log.info("Can't find player {} in {} server", username, authServer.getName());
+                        if (response.statusCode() == 200 && !response.body().isEmpty()) {
+                            log.info("Find player {} in {} server", username, authServer.getName());
+                            ctx.result(response.body());
+                            return;
+                        } else {
+                            log.info("Can't find player {} in {} server", username, authServer.getName());
+                        }
+                    } catch (Exception e) {
+                        log.warn("Failed to connect to {} server ({}): {}",
+                                authServer.getName(), authServer.getUrl(), e.getMessage());
+                        // 继续尝试下一个认证服务器
                     }
-
                 }
                 ctx.status(204);
             });

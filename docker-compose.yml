@@ -1,8 +1,9 @@
 name: yggdrasil-proxy
 services:
   yggdrasil-proxy:
-    build: src/main/java/com/deshark/entity
+    build: .
     volumes:
       - ./config:/app/config
     ports:
       - "32217:32217"
+    restart: unless-stopped

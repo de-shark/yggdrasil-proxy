@@ -15,9 +15,7 @@ public class LocalConfig {
     public int port;
     public List<AuthServer> authServers;
 
-
-    static File configPath = new File("config");
-    static File configFile = new File(configPath, "config.yml");
+    static File configFile = new File("config.yml");
 
     public LocalConfig() {
     }
@@ -29,8 +27,6 @@ public class LocalConfig {
 
     public static LocalConfig loadConfig() throws IOException {
         if (!configFile.exists()) {
-            configPath.mkdirs();
-
             List<AuthServer> authServers = new ArrayList<>();
             authServers.add(new AuthServer(0, "Mojang", "https://sessionserver.mojang.com", 5));
             authServers.add(new AuthServer(1, "LittleSkin", "https://littleskin.cn/api/yggdrasil/sessionserver", 5));
@@ -48,6 +44,6 @@ public class LocalConfig {
             return defaultConfig;
         }
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        return mapper.readValue(new File(configFile.toURI()), LocalConfig.class);
+        return mapper.readValue(configFile, LocalConfig.class);
     }
 }

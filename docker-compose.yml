@@ -3,7 +3,7 @@ services:
   yggdrasil-proxy:
     image: ghcr.io/de-shark/yggdrasil-proxy:latest
     volumes:
-      - ./config:/app/config
+      - ./config.yml:/app/config.yml
     ports:
       - "32217:32217"
     restart: unless-stopped

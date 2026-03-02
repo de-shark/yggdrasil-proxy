@@ -1,7 +1,7 @@
 name: yggdrasil-proxy
 services:
   yggdrasil-proxy:
-    image: ghcr.io/deshark/yggdrasil-proxy:latest
+    image: ghcr.io/de-shark/yggdrasil-proxy:latest
     volumes:
       - ./config:/app/config
     ports:

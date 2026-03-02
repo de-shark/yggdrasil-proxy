@@ -5,7 +5,7 @@ on:
     tags: [ "v*" ]
 
 jobs:
-  build:
+  build-and-upload:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -27,28 +27,31 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew shadowJar
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Log in to GHCR (with retry)
+        run: |
+          set -euo pipefail
+          for i in {1..6}; do
+            if echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin; then
+              exit 0
+            fi
+            sleep "$((i * 10))"
+          done
+          echo "Failed to login to GHCR after multiple retries." >&2
+          exit 1
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
+      - name: Extract Docker metadata
+        id: meta_release
         uses: docker/metadata-action@v5
         with:
           images: ghcr.io/${{ github.repository }}
           tags: |
+            type=raw,value=${{ github.ref_name }}
             type=raw,value=latest
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=sha
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.meta_release.outputs.tags }}
+          labels: ${{ steps.meta_release.outputs.labels }}

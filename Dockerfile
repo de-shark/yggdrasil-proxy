@@ -1,5 +1,5 @@
-FROM azul/zulu-openjdk-alpine:21-jre
+FROM eclipse-temurin:21-jre-alpine
 
-WORKDIR /app
-COPY ../build/libs/yggdrasil-proxy-1.0.1.jar /app/yggdrasil-proxy.jar
-CMD ["java", "-jar", "yggdrasil-proxy.jar"]
+ARG JAR_FILE=build/libs/yggdrasil-proxy-*.jar
+COPY ${JAR_FILE} /app/
+CMD ["java", "-jar", "/app/yggdrasil-proxy-*.jar"]

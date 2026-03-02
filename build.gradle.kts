@@ -1,10 +1,26 @@
+import java.io.ByteArrayOutputStream
+
 plugins {
     id("java")
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "com.deshark"
-version = "1.0.1"
+
+fun getGitVersion(): String {
+    return try {
+        val stdout = ByteArrayOutputStream()
+        exec {
+            commandLine("git", "describe", "--tags", "--dirty", "--always")
+            standardOutput = stdout
+        }
+        stdout.toString().trim().removePrefix("v")
+    } catch (e: Exception) {
+        "0.0.0-SNAPSHOT"
+    }
+}
+
+version = getGitVersion()
 
 repositories {
     mavenCentral()

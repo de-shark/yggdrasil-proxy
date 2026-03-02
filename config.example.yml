@@ -1,0 +1,10 @@
+port: 32217
+authServers:
+- priority: 0
+  name: "Mojang"
+  url: "https://sessionserver.mojang.com"
+  timeout: 5
+- priority: 1
+  name: "LittleSkin"
+  url: "https://littleskin.cn/api/yggdrasil/sessionserver"
+  timeout: 5
